@@ -1,4 +1,4 @@
-Projektna naloga za predmet Podatkovno rudarjenje
+# Projektna naloga za predmet Podatkovno rudarjenje #
 
 S sošolci smo se odločili, da bomo za projektno nalogo analizirali oglase na slovenskih spletnih straneh. Na podlagi podatkov bomo poskušali napovedati ID-je uporabnikov, katerih večja verjetnost je, da se odzovejo s klikom na oglas s panoge. Na podlagi rezultata bomo ocenili, za koliko odstotkov se algoritmično lahko izboljša ciljanje oglasov.
 
