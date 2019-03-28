@@ -1,11 +1,12 @@
 import pandas
+import datetime
 
-file = "C:/Users/Leon/Documents/iProm_podatki/export_2019-03-09.csv"
+'''dtype=[('date', datetime.datetime), ('dayOfWeek', int), ('timeFrame', int), ('userID', int), ('siteID', int), ('campaignID', int), ('adID', int), ('zoneID', int), ('masterSiteID', int), ('siteCategory', int), ('adIndustry', int), ('requests', int), ('views', int), ('clicks', int)]'''
+
 
 def read_data(t, file):
-    return pandas.read_csv(file, delimiter='\t').values[:, t]
+    return pandas.read_csv(file, delimiter='\t' ).values[:, t]
 
-print(read_data([0, 2], file))
 
 
 
