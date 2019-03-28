@@ -1,16 +1,13 @@
-import csv
+import pandas
+
+file = "C:/Users/Leon/Documents/iProm_podatki/export_2019-03-09.csv"
 
 def read_data(t, file):
-    tabela = []
-    with open(file) as csv_file:
-        csv_reader = csv.reader(csv_file, delimiter='\t')
-        for row in csv_reader:
-            p = []
-            for i in t:
-                p.append(row[i])
-            tabela.append(p)
+    return pandas.read_csv(file, delimiter='\t').values[:, t]
 
-    return tabela
+print(read_data([0, 2], file))
+
+
 
 
 
