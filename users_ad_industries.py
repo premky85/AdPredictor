@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import os
 
+
 path = 'C:/Users/Leon/Documents/iProm_podatki/'
 
 
@@ -14,35 +15,24 @@ for r, d, f in os.walk(path):
         if '.csv' in file:
             files.append(os.path.join(r, file))
 
-data = read([3, 10], files[0])
-data = np.array([[x, y] for [x, y] in data[:, [0, 1]] if x > 0 and y > 0])
+data = read([3, 10, 12], files[0])
+data = np.array([[x, y] for [x, y, z] in data[:, [0, 1, 2]] if x > 0 and y > 0 and z > 1])
 i = 1
 print(i)
 
 
+
+
 for file in files[1:]:
-    temp = read([3, 10], file)
-    temp = np.array([[x, y] for [x, y] in temp[:, [0, 1]] if x > 0 and y > 0])
+    temp = read([3, 10, 12], file)
+    temp = np.array([[x, y] for [x, y, z] in temp[:, [0, 1, 2]] if x > 0 and y > 0 and z > 1])
     data = np.concatenate((data, temp))
     i += 1
     print(i)
 
-print(data)
-
-#df = pd.DataFrame(data, columns=['user', 'ad_industry'])
-#df = df.groupby(['user'])#.sum().reset_index()
-#df = df.sort_values(by=['ocena'])
-#df.describe
-
-#print(df)
-
-#data = df.to_numpy()
-
-
 indexes = np.arange(len(data[:, 0]))
-print(data)
 
-plt.scatter(data[:, 0], data[:, 1], 1)
+plt.scatter(data[:, 0], data[:, 1], [np.count_nonzero(i) for i in data[:, 1]])
 plt.xlabel("user_ID")
 plt.ylabel('ad_industry')
 plt.show()

@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
 path = r"C:\Users\Domen Brunček\Desktop\FRI\4 semester\Data Mining\Project\podatki"
+path = 'C:/Users/leonp/Documents/iProm_podatki/'
 
 all_files = glob.glob(os.path.join(path, "*.csv"))
 
@@ -24,6 +25,6 @@ ax.yaxis.set_major_formatter(ticker.PercentFormatter(1.0, decimals=2))
 
 plt.bar(y_pos, clicks, align='center', alpha=0.5)
 plt.xticks(y_pos, dnevi)
-plt.ylabel('Procenti klikov')
+plt.ylabel('CTR')
 
 plt.show()
