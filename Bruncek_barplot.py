@@ -4,9 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
 path = r"C:\Users\Domen Brunček\Desktop\FRI\4 semester\Data Mining\Project\podatki"
-
 all_files = glob.glob(os.path.join(path, "*.csv"))
-
 df = pd.concat((pd.read_csv(f, header=None, sep='\t', usecols=[1,12,13]) for f in all_files), ignore_index=True)
 
 
