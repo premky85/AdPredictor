@@ -25,6 +25,7 @@ df = pltval.to_frame()
 print(df)
 #maks = df.loc[df['clicks'].idxmax()].clicks
 df = df.sort_values(by=['clicks'], ascending=True)
+#df.loc[:,'clicks'] *= 100 # za odstotke
 
 import plotly
 import plotly.graph_objs as go
