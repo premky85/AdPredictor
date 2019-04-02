@@ -14,7 +14,7 @@ def preberi(file: object) -> object:
 
 s = preberi(files[0])
 
-for f in files[1:2]:
+for f in files[1:]:
     s = pd.concat([s, preberi(f)])
 
 pltval = s.value_counts(normalize=True)
