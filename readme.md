@@ -22,7 +22,7 @@ bomo za različne metode gručenja preverili, katera nas bo privedla do najvišj
 Naš cilj je CTR čim bolj približati 1%, torej 1 klik na 100 prikazov oglasov, kar so nam na podjetju zaupali, da je 
 precej optimalna rešitev naše naloge. 
 
-Format
+</br>Format
 
 Podatki so razdeljeni na več datotek glede na datum. Stolpci z vrednostnimi so ločeni s tabulatorjem.
 
@@ -56,8 +56,7 @@ Atributi
 
 14 Clicks - število, ki predstavlja koliko krat je uporabnik kliknil na oglas
 
-
-Panoge oglasa/akcije
+</br>Panoge oglasa/akcije
 
 Vrednosti stolpca »AdIndustry«.
 
@@ -103,8 +102,7 @@ Vrednosti stolpca »AdIndustry«.
 
 22 Test
 
-
-Kategorije spletne strani
+</br>Kategorije spletne strani
 
 Vrednosti stolpca »SiteCategory«.
 
