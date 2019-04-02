@@ -52,7 +52,7 @@ ax.plot(lnspc, chi.pdf(lnspc, df['CTR']),
         'r-', lw=5, alpha=0.6, label='chi pdf')
 '''
 ax = df['CTR'].hist(bins=30, range=[0, 2])
-ax.set_xlabel("CTR")
+ax.set_xlabel("CTR [%]")
 ax.set_ylabel("Number of users")
 plt.show(block=True)
 
