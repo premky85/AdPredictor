@@ -7,7 +7,7 @@ from scipy.stats import chi
 from scipy import stats
 
 
-path = 'C:/Users/Leon/Documents/iProm_podatki/'
+path = 'C:/Users/leonp/Documents/iProm_podatki/'
 
 
 files = []
