@@ -56,6 +56,7 @@ Atributi
 
 14 Clicks - število, ki predstavlja koliko krat je uporabnik kliknil na oglas
 
+
 Panoge oglasa/akcije
 
 Vrednosti stolpca »AdIndustry«.
@@ -101,6 +102,7 @@ Vrednosti stolpca »AdIndustry«.
 21 Test
 
 22 Test
+
 
 Kategorije spletne strani
 
