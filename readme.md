@@ -45,10 +45,10 @@ Podatki so razdeljeni na več datotek glede na datum. Stolpci z vrednostnimi so 
 | 14 | Clicks | število, ki predstavlja koliko krat je uporabnik kliknil na oglas |
 </br>
 
-<pre> Panoge oglasa/akcije                              Kategorije spletnih strani</pre>
+<pre> <b>Panoge oglasa/akcije</b>                              <b>Kategorije spletnih strani</b></pre>
 
 <table>
-<tr><th>Vrednosti stolpca **»AdIndustry«**. </th><th>Vrednosti stolpca »SiteCategory«. </th></tr>
+  <tr><th>Vrednosti stolpca »AdIndustry«. </th><th>Vrednosti stolpca »SiteCategory«. </th></tr>
 <tr><td>
 
 | ID | Panoga |
@@ -81,7 +81,7 @@ Podatki so razdeljeni na več datotek glede na datum. Stolpci z vrednostnimi so 
 | -- | ---------- |
 | 0 | *Manjkajoč podatek |
 | 1 | Arts & Entertainment |
-| 2  Avtomobilizem |
+| 2 | Avtomobilizem |
 | 3 | Business |
 | 4 | Mlade družine |
 | 5 | Zdravje |
