@@ -1,8 +1,8 @@
-Napovedovanje oglasov za prikaz uporabnikom, s ciljem povečati CTR (click-through ratio)
+# Napovedovanje oglasov za prikaz uporabnikom, s ciljem povečati CTR (click-through ratio) #
 
-Leon Premk, Mario Balukčič, Domen Rok Brunček
+*Leon Premk, Mario Balukčič, Domen Rok Brunček*
 
-1.4.2019
+*1.4.2019*
 
 Na sejmu podjetij na FRI-ju smo se povezali s firmo iProm, ki so nam zagotovili podatke o uporabnikih in oglasih,
 ki jih prikazujejo. Zaradi GDPR-ja so vsi uporabniki predstavljeni z enoličnimi ID-ji. Zaupali so nam, da na dan
@@ -21,8 +21,6 @@ bomo za različne metode gručenja preverili, katera nas bo privedla do najvišj
 
 Naš cilj je CTR čim bolj približati 1%, torej 1 klik na 100 prikazov oglasov, kar so nam na podjetju zaupali, da je 
 precej optimalna rešitev naše naloge. 
-
-</br>Format
 
 Podatki so razdeljeni na več datotek glede na datum. Stolpci z vrednostnimi so ločeni s tabulatorjem.
 
