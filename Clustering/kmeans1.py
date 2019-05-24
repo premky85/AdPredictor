@@ -21,10 +21,13 @@ df = pd.concat((pd.read_csv(f, header=0, sep='\t', usecols=[3, 10, 13], dtype={"
 df = df.loc[(df["AdIndustry"] != 0)] #& (df["AdIndustry"] != "0")]
 df = df.groupby(["UserID", "AdIndustry"]).sum()
 df = df.loc[df["Clicks"] > 0]
+df2 = df.copy().reset_index() # real clicks
+del df2["AdIndustry"]
+df2 = df2.groupby("UserID").sum().reset_index()
 df = df.groupby(level=0).apply(lambda x: 100 * x/x.sum()).reset_index()
 df.rename(columns={df.columns[2]: "Size"}, inplace=True)
 
-users = df["UserID"].unique()[:-1] # vsi unikatni userji (no duplicates)
+users = df["UserID"].unique() # vsi unikatni userji (no duplicates)
 categories = np.arange(23)
 
 from collections import defaultdict
@@ -52,13 +55,13 @@ matrika=np.array(matrika)
 
 #print(matrika[:10, :])
 
-
-
+k_clusters = 6
 embedding = PCA(n_components=2)
-dimension_reduce =  embedding.fit_transform(matrika[:987, :])
-kmeans = KMeans(n_clusters=6, max_iter=150).fit(dimension_reduce)
+dimension_reduce =  embedding.fit_transform(matrika)
+kmeans = KMeans(n_clusters=k_clusters, max_iter=150).fit(dimension_reduce)
 labels = kmeans.labels_
 centroids = kmeans.cluster_centers_
+
 '''
 kmeans = KMeans(K=6, X=dimension_reduce, M=dimension_reduce, resolve_empty='singleton')
 kmeans.initialise()
@@ -77,9 +80,15 @@ for x,y in centroids:
 
 plt.show()
 
+userSkupina = { i: set() for i in range(k_clusters)}
+userSkupinaProcent = { i: set() for i in range(k_clusters)}
+for i,x in enumerate(users):
+    userSkupina[labels[i]].add((x,df2.loc[df2["UserID"] == x].values[0][1]))
 
+for k,v in userSkupina.items():
+    vsi = sum(n for _,n in v)
+    userSkupinaProcent[k].update([(x[0],x[1]/vsi) for x in v])
 
 #model = NMF(n_components=2, init='random')
-#W = model.fit_transform(matrika)   # TODO: Razdeli na testno in učno množico glej notebook 106-1_NMF
+#W = model.fit_transform(matrika)
 #H = model.components_
-
