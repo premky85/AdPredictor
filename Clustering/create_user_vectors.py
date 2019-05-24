@@ -3,7 +3,7 @@ import glob
 import os
 
 
-path = r"C:\Users\leonp\OneDrive\Documents\PycharmProjects\PR19_LP_MB_DB\Clustering\test\export_2019-02-23.csv"
+path = r"C:\Users\Leon\Documents\iProm_podatki\Filtered\export_2019-02-23.csv"
 
 
 all_files = glob.glob(path)

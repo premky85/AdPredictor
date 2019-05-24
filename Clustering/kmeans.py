@@ -3,12 +3,14 @@ import scipy
 import numpy as np
 import glob
 import pandas as pd
-from sklearn.cluster import KMeans
 from sklearn.decomposition import NMF
 import matplotlib
 import matplotlib.pyplot as plt
+from Clustering.clustering_functions import KMeans
+from sklearn.decomposition import PCA
 
-path = r"C:\dataMining\export_2019-02-23.csv"
+path = r"C:\Users\Leon\Documents\iProm_podatki\Filtered\export_2019-02-23.csv"
+
 
 
 all_files = glob.glob(path)
@@ -47,6 +49,30 @@ for i,user in enumerate(users):
             matrika[i][j] = vektoruser[user][category]
 matrika=np.array(matrika)
 
-model = NMF(n_components=2, init='random')
-W = model.fit_transform(matrika)   # TODO: Razdeli na testno in učno množico glej notebook 106-1_NMF
-H = model.components_
+#print(matrika[:10, :])
+
+
+
+embedding = PCA(n_components=2)
+dimension_reduce =  embedding.fit_transform(matrika[:1000, :])
+print(dimension_reduce)
+
+kmeans = KMeans(K=6, X=matrika[:1000, :], M=matrika[:1000, :], resolve_empty='singleton')
+kmeans.initialise()
+kmeans.cluster()
+clustering_results = kmeans.clustering_results
+labels = np.where(clustering_results == 1)[1]
+
+
+plt.figure(figsize=(10, 10))
+color = {0:"red", 1:"blue", 2:"yellow", 3:'green', 4:'violet', 5:'pink'}
+for c, x in zip(labels, dimension_reduce):
+    plt.plot(x[0], x[1], ".", color=color[c], markersize=10.0)
+plt.show()
+
+
+
+#model = NMF(n_components=2, init='random')
+#W = model.fit_transform(matrika)   # TODO: Razdeli na testno in učno množico glej notebook 106-1_NMF
+#H = model.components_
+
