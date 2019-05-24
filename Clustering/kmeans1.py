@@ -77,7 +77,6 @@ for c, x in zip(labels, dimension_reduce):
 
 for x,y in centroids:
     plt.plot(x,y,"x", color="black", markersize=20.0, alpha=0.4)
-
 plt.show()
 
 userSkupina = { i: set() for i in range(k_clusters)}
