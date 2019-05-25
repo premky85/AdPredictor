@@ -1,15 +1,9 @@
-import scipy.cluster.hierarchy as sch
-import scipy
 import numpy as np
 import glob
 import pandas as pd
 from sklearn.cluster import KMeans
-from sklearn.decomposition import NMF
-import matplotlib
 import matplotlib.pyplot as plt
-#from Clustering.clustering_functions import KMeans
 from sklearn.decomposition import PCA
-
 class Model1:
 
     def __init__(self,path):
