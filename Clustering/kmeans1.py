@@ -17,30 +17,32 @@ class Model1:
         self.all_files = glob.glob(path)
         self.df, self.df2 = self.read_to_df(self.all_files)
         self.k_clusters = 6
+        self.categories = np.arange(23)
         self.users = ""
         self.labels = ""
         self.centroids = ""
         self.dimension_reduce = ""
+        self.userSkupina = ""
 
     def read_to_df(self,all_files):
         df = pd.concat((pd.read_csv(f, header=0, sep='\t', usecols=[3, 10, 13], dtype={"Clicks": np.float},  names=["UserID", "AdIndustry", "Clicks"]) for f in all_files), ignore_index=True)
         df = df.loc[(df["AdIndustry"] != 0)] #& (df["AdIndustry"] != "0")]
         df = df.groupby(["UserID", "AdIndustry"]).sum()
         df = df.loc[df["Clicks"] > 0]
-        df2 = df.copy().reset_index() # real clicks
-        del df2["AdIndustry"]
-        df2 = df2.groupby("UserID").sum().reset_index()
+        pomozni = df.copy().reset_index()
+        #df2 = df.copy().reset_index() # real clicks
+        #del df2["AdIndustry"]
+        #df2 = df2.groupby("UserID").sum().reset_index()
         df = df.groupby(level=0).apply(lambda x: 100 * x/x.sum()).reset_index()
         df.rename(columns={df.columns[2]: "Size"}, inplace=True)
-        self.df = df
-        self.df2 = df2
-        return df,df2
+        #self.df = df
+        #self.df2 = df2
+        return df,pomozni
 
 
     def build_matrix_1(self,df):
         from collections import defaultdict
         self.users = self.df["UserID"].unique() # vsi unikatni userji (no duplicates)
-        categories = np.arange(23)
 
         vektoruser = defaultdict(dict) # slovar slovarjev
 
@@ -53,13 +55,13 @@ class Model1:
         matrika=[]
         for _ in range(0,len(self.users)):
             row=[]
-            for _ in range(0,len(categories)):
+            for _ in range(0,len(self.categories)):
                 row.append(0)
             matrika.append(row)
 
         # skozi vse userje (i = vrstica) in skozi vse kategorije (j = stolpec)
         for i,user in enumerate(self.users):
-            for j,category in enumerate(categories):
+            for j,category in enumerate(self.categories):
                 if user in vektoruser and category in vektoruser[user]:
                     matrika[i][j] = vektoruser[user][category]
         return np.array(matrika)
@@ -90,18 +92,33 @@ class Model1:
         plt.show()
 
     def results(self):
-        userSkupina = { i: set() for i in range(self.k_clusters)}
-        userSkupinaProcent = { i: list() for i in range(self.k_clusters)}
+        matrika = []
+        for _ in range(self.k_clusters):
+            row = []
+            for _ in self.categories:
+                row.append(0)
+            matrika.append(row)
+
+        self.userSkupina = { i: set() for i in range(self.k_clusters)}
+
         for i,x in enumerate(self.users):
-            userSkupina[self.labels[i]].add((x,self.df2.loc[self.df2["UserID"] == x].values[0][1]))
+            poizvedba = self.df2.loc[self.df2["UserID"] == x]
+            kliki = poizvedba["Clicks"].sum()
+            self.userSkupina[self.labels[i]].add((x,kliki))
 
-        for k,v in userSkupina.items():
-            vsi = sum(n for _,n in v)
-            userSkupinaProcent[k].extend([x[1]/vsi for x in v])
-        smalldf = pd.DataFrame([i for i in userSkupinaProcent.items()], columns=['Gruca', 'Procent'])
-        return smalldf
+        # TODO: Izboljšaj to gradnjo matrike, ker je počasnejša od tvoje mame.
+        for k,v in self.userSkupina.items(): # k = gruca a.k.a vrstice
+            vsi = sum(n for _,n in v)    # vsi kliki v gruci
+            for i in self.categories:    # za vsako kategorijo
+                sestevek = 0
+                for user,_ in v:         # za vsakega userja v gruci gledam koliko klikov na kategorijo ma
+                    sql = self.df2.loc[(self.df2["UserID"] == user) & (self.df2["AdIndustry"] == i)]
+                    if not sql.empty:
+                        sestevek += sql.values[0][2]
+                matrika[k][i] = sestevek/vsi
+        return np.array(matrika)
 
 
-modelMario = Model1(r"C:\dataMining\1\export_2019-02-23.csv")
+modelMario = Model1(r"C:\dataMining\0\export_2019-02-23.csv")
 modelMario.kmeans(6)
 print(modelMario.results())
