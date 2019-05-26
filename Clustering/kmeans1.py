@@ -35,7 +35,7 @@ class Model1:
         return df,pomozni
 
 
-    def build_matrix_1(self,df):
+    def build_matrix_1(self):
         from collections import defaultdict
         self.users = self.df["UserID"].unique() # vsi unikatni userji (no duplicates)
 
@@ -59,11 +59,11 @@ class Model1:
             for j,category in enumerate(self.categories):
                 if user in vektoruser and category in vektoruser[user]:
                     matrika[i][j] = vektoruser[user][category]
-        return np.array(matrika)
+        return np.array(matrika), self.users
 
     def kmeans(self, k, iter):
         self.k_clusters = k
-        matrika = self.build_matrix_1(self.df)
+        matrika = self.build_matrix_1()
         if not self.testing:
             embedding = PCA(n_components=2)
             self.dimension_reduce =  embedding.fit_transform(matrika)
@@ -116,6 +116,6 @@ class Model1:
         return np.array(matrika)
 
 
-modelMario = Model1(r"C:\dataMining\1\export_2019-03-18.csv", testing=True)
-modelMario.kmeans(k=6,iter=150)
-print(modelMario.results())
+#modelMario = Model1(r"C:\dataMining\1\export_2019-03-18.csv", testing=True)
+#modelMario.kmeans(k=6,iter=150)
+#print(modelMario.results())
