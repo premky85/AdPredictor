@@ -6,12 +6,13 @@ import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 class Model1:
 
-    def __init__(self,path):
+    def __init__(self,path, testing):
         self.path = path
         self.all_files = glob.glob(path)
         self.df, self.df2 = self.read_to_df(self.all_files)
         self.k_clusters = 6
         self.categories = np.arange(23)
+        self.testing = testing
         self.users = ""
         self.labels = ""
         self.centroids = ""
@@ -60,12 +61,15 @@ class Model1:
                     matrika[i][j] = vektoruser[user][category]
         return np.array(matrika)
 
-    def kmeans(self, k):
+    def kmeans(self, k, iter):
         self.k_clusters = k
         matrika = self.build_matrix_1(self.df)
-        embedding = PCA(n_components=2)
-        self.dimension_reduce =  embedding.fit_transform(matrika)
-        kmeans = KMeans(n_clusters=self.k_clusters, max_iter=150).fit(self.dimension_reduce)
+        if not self.testing:
+            embedding = PCA(n_components=2)
+            self.dimension_reduce =  embedding.fit_transform(matrika)
+            kmeans = KMeans(n_clusters=self.k_clusters, max_iter=iter).fit(self.dimension_reduce)
+        else:
+            kmeans = KMeans(n_clusters=self.k_clusters, max_iter=iter).fit(matrika)
         self.labels = kmeans.labels_
         self.centroids = kmeans.cluster_centers_
 
@@ -100,7 +104,6 @@ class Model1:
             kliki = poizvedba["Clicks"].sum()
             self.userSkupina[self.labels[i]].add((x,kliki))
 
-        # TODO: Izboljšaj to gradnjo matrike, ker je počasnejša od tvoje mame.
         for k,v in self.userSkupina.items(): # k = gruca a.k.a vrstice
             vsi = sum(n for _,n in v)    # vsi kliki v gruci
             for i in self.categories:    # za vsako kategorijo
@@ -113,6 +116,6 @@ class Model1:
         return np.array(matrika)
 
 
-modelMario = Model1(r"C:\dataMining\0\export_2019-02-23.csv")
-modelMario.kmeans(6)
+modelMario = Model1(r"C:\dataMining\1\export_2019-03-18.csv", testing=True)
+modelMario.kmeans(k=6,iter=150)
 print(modelMario.results())
