@@ -76,14 +76,14 @@ class ModelUsersWithNoClicks:
         print(self.matrix)
 
     def results(self):
-        matrika = []
-        for i in range(self.matrix.shape[0]):
-            a = 1
+        #TODO: Create useful results for future testing
+        return None
+
 
 
 
 
 a = ModelUsersWithNoClicks(r"C:\Users\leonp\Documents\iProm_podatki\export_2019-02-23.csv")
 a.kMeans(5, testing=True)
-a.results()
+
 
