@@ -6,14 +6,15 @@ from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
 from random import randint
 from collections import defaultdict
-PATH = r"C:\Users\Domen Brunček\Desktop\FRI\4 semester\Data Mining\Project\podatki\filtered_data\0\export_2019-02-23.csv"
+#PATH = r"C:\Users\Domen Brunček\Desktop\FRI\4 semester\Data Mining\Project\podatki\filtered_data\0\export_2019-02-23.csv"
 
 
 class ModelUsersWithNoClicks:
     def __init__(self, path):
         self.all_files = glob.glob(path)
         self.df = self.process_data()
-        self.matrix = self.make_matrix()
+        self.matrix = self.make_matrix()[0]
+
 
     def process_data(self):
         original_df = pd.concat((pd.read_csv(f, header=0, sep='\t', usecols=[3, 9], names=["UserID", "SiteCategory"], dtype={"UserID": np.int64, "siteCategory": np.float}) for f in self.all_files), ignore_index=True)
@@ -24,7 +25,7 @@ class ModelUsersWithNoClicks:
         return df
 
     def make_matrix(self):
-        users = self.df["UserID"].unique()[:-1]  # vsi unikatni userji (no duplicates)
+        self.users = self.df["UserID"].unique()[:-1]  # vsi unikatni userji (no duplicates)
         categories = self.df["SiteCategory"].unique()[:-1]  # vse unikatne kategorija
 
         vector_users = defaultdict(dict)  # slovar slovarjev
@@ -34,43 +35,55 @@ class ModelUsersWithNoClicks:
 
         # fill matrix rows with 0
         matrika = []
-        for _ in range(0, len(users)):
+        for _ in range(0, len(self.users)):
             row = []
             for _ in range(0, len(categories)):
                 row.append(0)
             matrika.append(row)
 
         # skozi vse userje (i = vrstica) in skozi vse kategorije (j = stolpec)
-        for i, user in enumerate(users):
+        for i, user in enumerate(self.users):
             for j, category in enumerate(categories):
                 if user in vector_users and category in vector_users[user]:
                     matrika[i][j] = vector_users[user][category]
-        return np.array(matrika)
+        return np.array(matrika), self.users
 
-    def kMeans(self, k, plot=False):
-        embedding = PCA(n_components=2)
-        dimension_reduce = embedding.fit_transform(self.matrix[:100])
-        print(dimension_reduce)
+    def kMeans(self, k, plot=False, testing=False):
+        if not testing:
+            embedding = PCA(n_components=2)
+            self.dimension_reduce =  embedding.fit_transform(self.matrix)
+            kmeans = KMeans(n_clusters=k, max_iter=150).fit(self.dimension_reduce)
+        else:
+            kmeans = KMeans(n_clusters=k, max_iter=150).fit(self.matrix)
+
+
 
         colors = ["#%06X" % randint(0, 0xFFFFFF) for i in range(k)]
-        kmeans = KMeans(n_clusters=k, max_iter=1000).fit(dimension_reduce)
-        labels = kmeans.labels_
-        centroids = kmeans.cluster_centers_
-        if plot: self.plot(dimension_reduce, colors, labels, centroids)
+        self.labels = kmeans.labels_
+        self.centroids = kmeans.cluster_centers_
+        #if plot: self.plot(dimension_reduce, colors, self.labels, self.centroids)
 
     def plot(self, dimensions, colors, labels, centroids):
-        print("plot")
+        #print("plot")
         for c, x in zip(labels, dimensions):
             plt.plot(x[0], x[1], ".", color=colors[c], markersize=10.0)
         for x, y in centroids:
             plt.plot(x, y, "x", markersize=5, color="black")
         plt.show()
-        print("plotted")
+        #print("plotted")
 
     def show_df(self):
         print(self.matrix)
 
+    def results(self):
+        matrika = []
+        for i in range(self.matrix.shape[0]):
+            a = 1
 
-a = ModelUsersWithNoClicks(PATH)
-a.kMeans(5, True)
+
+
+
+a = ModelUsersWithNoClicks(r"C:\Users\leonp\Documents\iProm_podatki\export_2019-02-23.csv")
+a.kMeans(5, testing=True)
+a.results()
 

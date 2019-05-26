@@ -63,7 +63,7 @@ class Model1:
 
     def kmeans(self, k, iter):
         self.k_clusters = k
-        matrika = self.build_matrix_1()
+        matrika = self.build_matrix_1()[0]
         if not self.testing:
             embedding = PCA(n_components=2)
             self.dimension_reduce =  embedding.fit_transform(matrika)
@@ -72,6 +72,8 @@ class Model1:
             kmeans = KMeans(n_clusters=self.k_clusters, max_iter=iter).fit(matrika)
         self.labels = kmeans.labels_
         self.centroids = kmeans.cluster_centers_
+
+
 
     '''
     kmeans = KMeans(K=6, X=dimension_reduce, M=dimension_reduce, resolve_empty='singleton')
@@ -112,10 +114,12 @@ class Model1:
                     sql = self.df2.loc[(self.df2["UserID"] == user) & (self.df2["AdIndustry"] == i)]
                     if not sql.empty:
                         sestevek += sql.values[0][2]
-                matrika[k][i] = sestevek/vsi
-        return np.array(matrika)
+                if vsi != 0:
+                    matrika[k][i] = sestevek/vsi
+                else: matrika[k][i] = 0
+        return np.array(matrika), self.centroids
 
 
-#modelMario = Model1(r"C:\dataMining\1\export_2019-03-18.csv", testing=True)
+#modelMario = Model1(r"C:\Users\leonp\Documents\iProm_podatki\1\export_2019-03-18.csv", testing=True)
 #modelMario.kmeans(k=6,iter=150)
 #print(modelMario.results())
