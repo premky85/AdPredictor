@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import os
 
-path = 'C:/Users/leonp/Documents/iProm_podatki/'
+path = 'C:/Users/Leon/Documents/iProm_podatki/'
 
 
 files = []
