@@ -38,6 +38,6 @@ indexes = np.arange(len(data[:, 0]))
 print(data)
 
 plt.bar(indexes, data[:, 1])
-plt.xlabel("ID_kampanje")
+plt.xlabel("Kampanja")
 plt.ylabel('CTR')
 plt.show()
