@@ -4,11 +4,12 @@ import pandas as pd
 import glob
 import os
 from Clustering import kmeans1 as KMeans_1
-from Clustering import kmeans_0 as KMeans_0
+#from Clustering import kmeans_0 as KMeans_0
 import Clustering.read_files
 import numpy as np
 from scipy.spatial import distance
 from sklearn.decomposition import PCA
+
 
 
 path = r"C:\Users\leonp\Documents\iProm_podatki"
@@ -33,8 +34,8 @@ for f in all_files[:10]:
 
 
     test_df = df.tail(round(0.4 * df.shape[0]))
-    a = round(0.5 * test_df.shape[0])
-    t = test_df.tail(round(0.5 * test_df.shape[0]))
+    #a = round(0.5 * test_df.shape[0])
+    #t = test_df.tail(round(0.5 * test_df.shape[0]))
     Clustering.read_files.read_file_learn_about_users(f)
 
 
@@ -42,10 +43,11 @@ for f in all_files[:10]:
     #kmeans_0 = KMeans_0.ModelUsersWithNoClicks(r"C:\Users\leonp\Documents\iProm_podatki\0" + "\\" + file_name)
 
     kmeans_1 = KMeans_1.Model1(r"C:\Users\leonp\Documents\iProm_podatki\1" + "\\" + file_name, testing=True)
+    print("Model created")
 
     #test_0 = KMeans_0.ModelUsersWithNoClicks(r"C:\Users\leonp\Documents\iProm_podatki\0" + "\\test_" + file_name).make_matrix()
     test_1 = KMeans_1.Model1(r"C:\Users\leonp\Documents\iProm_podatki\1" + "\\test_" + file_name, testing=True).build_matrix_1()
-
+    print("Matrix built")
 
     #print(test_1[0])
     #print(test_1[1])
@@ -56,9 +58,9 @@ for f in all_files[:10]:
     #clusters_0 =
     kmeans_1.kmeans(k=6,iter=150)
     results_1, clusters_1 = kmeans_1.results()
-    lala = t[t["Clicks"] != 0]
+    #lala = t[t["Clicks"] != 0]
 
-    for _, x_ in t.iterrows():
+    for _, x_ in test_df.iterrows():
         x = x_["UserID"]
         if x in test_1[1] and x_["Clicks"] != 0:
             observed += 1
@@ -71,21 +73,10 @@ for f in all_files[:10]:
 
             if result_category == x_["AdIndustry"]:
                 hit += 1
+            print(hit)
 
-    print(hit / observed * 100)
+    print("Percentage: ",  hit / observed * 100)
 
 prediction_ratio = hit / observed * 100
 
-print("Model has " + prediction_ratio + "% ratio.")
-
-
-
-
-
-
-
-
-
-
-
-
+print("Model has ", prediction_ratio, "% ratio.")

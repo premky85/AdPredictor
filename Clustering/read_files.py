@@ -16,16 +16,18 @@ def read_file(path):
     df1 = df1[df1["Clicks"] != 0]
     df1.to_csv(r"C:\Users\leonp\Documents\iProm_podatki\1\users_1.csv", "\t", header=["userID", "Clicks"])
 
-    df2 = df.groupby(["userID"]).sum().reset_index()
-    df2 = df2[df2["Clicks"] == 0]
-    df2.to_csv(r"C:\Users\leonp\Documents\iProm_podatki\0\users_0.csv", "\t", header=["userID", "Clicks"])
+
+    #df2 = df.groupby(["userID"]).sum().reset_index()
+    #df2 = df2[df2["Clicks"] == 0]
+    #df2.to_csv(r"C:\Users\leonp\Documents\iProm_podatki\0\users_0.csv", "\t", header=["userID", "Clicks"])
+
 
     Clustering.filter_users.filter_users(path)
 
 def read_file_learn_about_users(path):
     all_files = glob.glob(path)#os.path.join(path, "*.csv"))
     df = pd.concat((pd.read_csv(f, header=None, sep='\t', usecols=[3, 13], names=["userID", "Clicks"]) for f in all_files), ignore_index=True)
-    df = df[round(0.6 * df.shape[0]):round(0.8 * df.shape[0])]
+    df = df.tail(round(0.4 * df.shape[0]))
 
 
     df1 = df.groupby(["userID"]).sum().reset_index()

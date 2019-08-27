@@ -24,11 +24,13 @@ def filter_users(path):
 
         name = os.path.basename(f)
 
-        df_0 = df.loc[df["UserID"].isin(df_ids_0.values)]
 
-        df_0.to_csv(r"C:\Users\leonp\Documents\iProm_podatki\0" + "\\" + name, "\t",
-                  header=["Date", "DayOfWeek", "TimeFrame", "UserID", "SiteID", "CampaignID", "AdID", "ZoneID",
-                          "MasterSiteID", "SiteCategory", "AdIndustry", "Requests", "Views", "Clicks"], index=False)
+        #df_0 = df.loc[df["UserID"].isin(df_ids_0.values)]
+
+        #df_0.to_csv(r"C:\Users\leonp\Documents\iProm_podatki\0" + "\\" + name, "\t",
+        #          header=["Date", "DayOfWeek", "TimeFrame", "UserID", "SiteID", "CampaignID", "AdID", "ZoneID",
+        #                  "MasterSiteID", "SiteCategory", "AdIndustry", "Requests", "Views", "Clicks"], index=False)
+
 
         df_1 = df.loc[df["UserID"].isin(df_ids_1.values)]
 
@@ -49,15 +51,16 @@ def filter_users_learn(path):
                          names=["Date", "DayOfWeek", "TimeFrame", "UserID", "SiteID", "CampaignID", "AdID", "ZoneID",
                                 "MasterSiteID", "SiteCategory", "AdIndustry", "Requests", "Views", "Clicks"],
                          index_col=False)
-        df = df[round(0.6 * df.shape[0]):round(0.8 * df.shape[0])]
+        df = df.tail(round(0.4 * df.shape[0]))
 
         name = os.path.basename(f)
 
-        df_0 = df.loc[df["UserID"].isin(df_ids_0.values)]
 
-        df_0.to_csv(r"C:\Users\leonp\Documents\iProm_podatki\0" + "\\test_" + name, "\t",
-                  header=["Date", "DayOfWeek", "TimeFrame", "UserID", "SiteID", "CampaignID", "AdID", "ZoneID",
-                          "MasterSiteID", "SiteCategory", "AdIndustry", "Requests", "Views", "Clicks"], index=False)
+        #df_0 = df.loc[df["UserID"].isin(df_ids_0.values)]
+
+        #df_0.to_csv(r"C:\Users\leonp\Documents\iProm_podatki\0" + "\\test_" + name, "\t",
+        #          header=["Date", "DayOfWeek", "TimeFrame", "UserID", "SiteID", "CampaignID", "AdID", "ZoneID",
+        #                  "MasterSiteID", "SiteCategory", "AdIndustry", "Requests", "Views", "Clicks"], index=False)
 
         df_1 = df.loc[df["UserID"].isin(df_ids_1.values)]
 
