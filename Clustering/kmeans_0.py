@@ -12,7 +12,7 @@ from collections import defaultdict
 class ModelUsersWithNoClicks:
     def __init__(self, path):
         self.all_files = glob.glob(path)
-        self.df = self.process_data()
+        self.df, self.df2 = self.process_data()
         self.matrix = self.make_matrix()[0]
 
 
@@ -20,13 +20,15 @@ class ModelUsersWithNoClicks:
         original_df = pd.concat((pd.read_csv(f, header=0, sep='\t', usecols=[3, 9], names=["UserID", "SiteCategory"], dtype={"UserID": np.int64, "siteCategory": np.float}) for f in self.all_files), ignore_index=True)
         df = original_df.loc[(original_df["SiteCategory"] != 0)]
         df = df.groupby(["UserID", "SiteCategory"]).size()
+        df2 = df.reset_index()
+        df2.rename(columns={df2.columns[2]: "Visits"}, inplace=True)
         df = df.groupby(level=0).apply(lambda x: 100 * x / float(x.sum())).reset_index()
         df.rename(columns={df.columns[2]: "Size"}, inplace=True)
-        return df
+        return df, df2
 
     def make_matrix(self):
         self.users = self.df["UserID"].unique()[:-1]  # vsi unikatni userji (no duplicates)
-        categories = self.df["SiteCategory"].unique()[:-1]  # vse unikatne kategorija
+        self.categories = self.df["SiteCategory"].unique()[:-1]  # vse unikatne kategorija
 
         vector_users = defaultdict(dict)  # slovar slovarjev
         # user = UserID in SiteCategory in Size
@@ -37,18 +39,19 @@ class ModelUsersWithNoClicks:
         matrika = []
         for _ in range(0, len(self.users)):
             row = []
-            for _ in range(0, len(categories)):
+            for _ in range(0, len(self.categories)):
                 row.append(0)
             matrika.append(row)
 
         # skozi vse userje (i = vrstica) in skozi vse kategorije (j = stolpec)
         for i, user in enumerate(self.users):
-            for j, category in enumerate(categories):
+            for j, category in enumerate(self.categories):
                 if user in vector_users and category in vector_users[user]:
                     matrika[i][j] = vector_users[user][category]
         return np.array(matrika), self.users
 
     def kMeans(self, k, plot=False, testing=False):
+        self.k_clusters = k
         if not testing:
             embedding = PCA(n_components=2)
             self.dimension_reduce =  embedding.fit_transform(self.matrix)
@@ -76,8 +79,34 @@ class ModelUsersWithNoClicks:
         print(self.matrix)
 
     def results(self):
-        #TODO: Create useful results for future testing
-        return None
+        matrika = []
+        for _ in range(self.k_clusters):
+            row = []
+            for _ in self.categories:
+                row.append(0)
+            matrika.append(row)
+
+        self.userSkupina = {i: set() for i in range(self.k_clusters)}
+
+        for i, x in enumerate(self.users):
+            poizvedba = self.df2.loc[self.df2["UserID"] == x]
+            views = poizvedba["Visits"].sum()
+            self.userSkupina[self.labels[i]].add((x, views))
+
+        for k, v in self.userSkupina.items():  # k = gruca a.k.a vrstice
+            vsi = sum(n for _, n in v)  # vsi kliki v gruci
+            for i in self.categories:  # za vsako kategorijo
+                sestevek = 0
+                for user, _ in v:  # za vsakega userja v gruci gledam koliko klikov na kategorijo ma
+                    sql = self.df2.loc[(self.df2["UserID"] == user) & (self.df2["SiteCategory"] == i)]
+                    if not sql.empty:
+                        sestevek += sql.values[0][2]
+                if vsi != 0:
+                    matrika[k][np.where(self.categories == i)] = sestevek / vsi
+                else:
+                    matrika[k][i] = 0
+        return np.array(matrika), self.centroids
+        #return None
 
 
 
@@ -85,5 +114,7 @@ class ModelUsersWithNoClicks:
 
 a = ModelUsersWithNoClicks(r"C:\Users\leonp\Documents\iProm_podatki\export_2019-02-23.csv")
 a.kMeans(5, testing=True)
+results = a.results()
+m = a.matrix
 
 
