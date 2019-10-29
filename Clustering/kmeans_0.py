@@ -117,4 +117,5 @@ a.kMeans(5, testing=True)
 results = a.results()
 m = a.matrix
 
+#TODO speed up the code !!!!!!!
 
