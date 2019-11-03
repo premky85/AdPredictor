@@ -31,6 +31,7 @@ class ModelUsersWithNoClicks:
         self.users = self.df["UserID"].unique()[:-1]  # vsi unikatni userji (no duplicates)
         self.categories = self.df["SiteCategory"].unique()[:-1]  # vse unikatne kategorija
 
+
         vector_users = defaultdict(dict)  # slovar slovarjev
         # user = UserID in SiteCategory in Size
         for index, user in self.df.iterrows():
@@ -103,7 +104,8 @@ class ModelUsersWithNoClicks:
                     if not sql.empty:
                         sestevek += sql.values[0][2]
                 if vsi != 0:
-                    matrika[k][np.where(self.categories == i)] = sestevek / vsi
+                    z = np.where(self.categories == i)[0][0]
+                    matrika[k][z] = sestevek / vsi
                 else:
                     matrika[k][i] = 0
         return np.array(matrika), self.centroids

@@ -15,9 +15,14 @@ from sklearn.decomposition import PCA
 path = r"C:\Users\leonp\Documents\iProm_podatki"
 
 all_files = glob.glob(os.path.join(path, "*.csv"))
-
-observed = 0
-hit = 0
+siteCategory_adIndustry = {1: 9, 2: 1, 3: 11, 4: 5, 6: 6, 7: 9, 8: 4, 9: 15, 10: 18, 11: 7, 12: 8, 13: 14, 14: 16,
+                           15: 15, 16: 12, 17: 15, 18: 11, 19: 15, 20: 12, 21: 15, 22: 17, 23: 15, 24: 15, 25: 15,
+                           26: 15, 1000: 18, 1001: 18, 1002: 15, 1003: 13, 1004: 7, 1005: 10, 1006: 14, 1007: 9,
+                           1008: 21, 1009: 22, 1010: 13}
+observed_0 = 0
+observed_1 = 0
+hit_0 = 0
+hit_1 = 0
 i = 0
 for f in all_files[:10]:
     file_name = os.path.basename(f)
@@ -69,7 +74,7 @@ for f in all_files[:10]:
     for _, x_ in test_df.iterrows():
         x = x_["UserID"]
         if x in test_1[1] and x_["Clicks"] != 0:
-            observed += 1
+            observed_1 += 1
             zx = np.where(test_1[1] == x)[0]
             z = test_1[0][zx]
             distances = [distance.euclidean(z, y) for y in clusters_1]
@@ -78,14 +83,27 @@ for f in all_files[:10]:
             result_category = np.where(results_1[result] == np.max(results_1[result]))[0][0]
 
             if result_category == x_["AdIndustry"]:
-                hit += 1
-            print(hit)
-            
-        #TODO add case for users with no clicks (choose right ad industry based on their site visits)
+                hit_1 += 1
+            print("hit_1: ", hit_1, "observed_1: ", observed_1, "Predicted: ",  x_["AdIndustry"], "Actual: ", result_category)
 
-    print("Percentage: ",  hit / observed * 100)
+        elif x in test_0[1] and x_["Clicks"] != 0:
+            observed_0 += 1
+            zx = np.where(test_0[1] == x)[0]
+            z = test_0[0][zx]
+            distances = [distance.euclidean(z, y) for y in clusters_1]
+
+            result = distances.index(min(distances))
+            result_category = np.where(results_0[result] == np.max(results_0[result]))[0][0]
+
+            if result_category == siteCategory_adIndustry[x_["SiteCategory"]]:
+                hit_0 += 1
+            print("hit_0: ", hit_0, "observed_0: ", observed_0, "Predicted: ",  siteCategory_adIndustry[x_["SiteCategory"]], "Actual: ", result_category)
+
+        
+
+    print("Percentage: ",  (hit_1 + hit_0) / (observed_1 + observed_0) * 100)
     print()
 
-prediction_ratio = hit / observed * 100
+prediction_ratio = (hit_1 + hit_0) / (observed_1 + observed_0) * 100
 
 print("Model has ", prediction_ratio, "% ratio.")
