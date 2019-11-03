@@ -120,6 +120,6 @@ class Model1:
         return np.array(matrika), self.centroids
 
 
-modelMario = Model1(r"C:\Users\leonp\Documents\iProm_podatki\1\export_2019-03-18.csv", testing=True)
-modelMario.kmeans(k=6,iter=150)
-print(modelMario.results())
+#modelMario = Model1(r"C:\Users\leonp\Documents\iProm_podatki\1\export_2019-03-18.csv", testing=True)
+#modelMario.kmeans(k=6,iter=150)
+#print(modelMario.results())

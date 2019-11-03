@@ -13,7 +13,8 @@ class ModelUsersWithNoClicks:
     def __init__(self, path):
         self.all_files = glob.glob(path)
         self.df, self.df2 = self.process_data()
-        self.matrix = self.make_matrix()[0]
+        self.matrix_full = self.make_matrix()
+        self.matrix = self.matrix_full[0]
 
 
     def process_data(self):
@@ -112,10 +113,10 @@ class ModelUsersWithNoClicks:
 
 
 
-a = ModelUsersWithNoClicks(r"C:\Users\leonp\Documents\iProm_podatki\export_2019-02-23.csv")
-a.kMeans(5, testing=True)
-results = a.results()
-m = a.matrix
+#a = ModelUsersWithNoClicks(r"C:\Users\leonp\Documents\iProm_podatki\export_2019-02-23.csv")
+#a.kMeans(5, testing=True)
+#results = a.results()
+#m = a.matrix
 
 #TODO speed up the code !!!!!!!
 

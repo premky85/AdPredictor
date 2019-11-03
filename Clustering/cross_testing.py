@@ -4,7 +4,7 @@ import pandas as pd
 import glob
 import os
 from Clustering import kmeans1 as KMeans_1
-#from Clustering import kmeans_0 as KMeans_0
+from Clustering import kmeans_0 as KMeans_0
 import Clustering.read_files
 import numpy as np
 from scipy.spatial import distance
@@ -20,7 +20,8 @@ observed = 0
 hit = 0
 i = 0
 for f in all_files[:10]:
-    print(i)
+    file_name = os.path.basename(f)
+    print(i, ": ", file_name)
     i += 1
 
     Clustering.read_files.read_file(f)
@@ -39,15 +40,15 @@ for f in all_files[:10]:
     Clustering.read_files.read_file_learn_about_users(f)
 
 
-    file_name = os.path.basename(f)
-    #kmeans_0 = KMeans_0.ModelUsersWithNoClicks(r"C:\Users\leonp\Documents\iProm_podatki\0" + "\\" + file_name)
-
+    kmeans_0 = KMeans_0.ModelUsersWithNoClicks(r"C:\Users\leonp\Documents\iProm_podatki\0" + "\\" + file_name)
+    print("Model 0 created")
     kmeans_1 = KMeans_1.Model1(r"C:\Users\leonp\Documents\iProm_podatki\1" + "\\" + file_name, testing=True)
-    print("Model created")
+    print("Model 1 created")
 
-    #test_0 = KMeans_0.ModelUsersWithNoClicks(r"C:\Users\leonp\Documents\iProm_podatki\0" + "\\test_" + file_name).make_matrix()
+    test_0 = KMeans_0.ModelUsersWithNoClicks(r"C:\Users\leonp\Documents\iProm_podatki\0" + "\\test_" + file_name).matrix_full
+    print("Matrix 0 built")
     test_1 = KMeans_1.Model1(r"C:\Users\leonp\Documents\iProm_podatki\1" + "\\test_" + file_name, testing=True).build_matrix_1()
-    print("Matrix built")
+    print("Matrix 1 built")
 
     #print(test_1[0])
     #print(test_1[1])
@@ -58,7 +59,12 @@ for f in all_files[:10]:
     #clusters_0 =
     kmeans_1.kmeans(k=6,iter=150)
     results_1, clusters_1 = kmeans_1.results()
+    print("KMeans 1 done")
     #lala = t[t["Clicks"] != 0]
+
+    kmeans_0.kMeans(50, testing=True)
+    results_0, clusters_0 = kmeans_0.results()
+    print("KMeans 0 done")
 
     for _, x_ in test_df.iterrows():
         x = x_["UserID"]
@@ -74,8 +80,11 @@ for f in all_files[:10]:
             if result_category == x_["AdIndustry"]:
                 hit += 1
             print(hit)
+            
+        #TODO add case for users with no clicks (choose right ad industry based on their site visits)
 
     print("Percentage: ",  hit / observed * 100)
+    print()
 
 prediction_ratio = hit / observed * 100
 

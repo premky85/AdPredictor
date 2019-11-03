@@ -25,11 +25,11 @@ def filter_users(path):
         name = os.path.basename(f)
 
 
-        #df_0 = df.loc[df["UserID"].isin(df_ids_0.values)]
+        df_0 = df.loc[df["UserID"].isin(df_ids_0.values)]
 
-        #df_0.to_csv(r"C:\Users\leonp\Documents\iProm_podatki\0" + "\\" + name, "\t",
-        #          header=["Date", "DayOfWeek", "TimeFrame", "UserID", "SiteID", "CampaignID", "AdID", "ZoneID",
-        #                  "MasterSiteID", "SiteCategory", "AdIndustry", "Requests", "Views", "Clicks"], index=False)
+        df_0.to_csv(r"C:\Users\leonp\Documents\iProm_podatki\0" + "\\" + name, "\t",
+                  header=["Date", "DayOfWeek", "TimeFrame", "UserID", "SiteID", "CampaignID", "AdID", "ZoneID",
+                          "MasterSiteID", "SiteCategory", "AdIndustry", "Requests", "Views", "Clicks"], index=False)
 
 
         df_1 = df.loc[df["UserID"].isin(df_ids_1.values)]
@@ -56,11 +56,11 @@ def filter_users_learn(path):
         name = os.path.basename(f)
 
 
-        #df_0 = df.loc[df["UserID"].isin(df_ids_0.values)]
+        df_0 = df.loc[df["UserID"].isin(df_ids_0.values)]
 
-        #df_0.to_csv(r"C:\Users\leonp\Documents\iProm_podatki\0" + "\\test_" + name, "\t",
-        #          header=["Date", "DayOfWeek", "TimeFrame", "UserID", "SiteID", "CampaignID", "AdID", "ZoneID",
-        #                  "MasterSiteID", "SiteCategory", "AdIndustry", "Requests", "Views", "Clicks"], index=False)
+        df_0.to_csv(r"C:\Users\leonp\Documents\iProm_podatki\0" + "\\test_" + name, "\t",
+                  header=["Date", "DayOfWeek", "TimeFrame", "UserID", "SiteID", "CampaignID", "AdID", "ZoneID",
+                         "MasterSiteID", "SiteCategory", "AdIndustry", "Requests", "Views", "Clicks"], index=False)
 
         df_1 = df.loc[df["UserID"].isin(df_ids_1.values)]
 

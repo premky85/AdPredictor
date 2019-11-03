@@ -17,9 +17,9 @@ def read_file(path):
     df1.to_csv(r"C:\Users\leonp\Documents\iProm_podatki\1\users_1.csv", "\t", header=["userID", "Clicks"])
 
 
-    #df2 = df.groupby(["userID"]).sum().reset_index()
-    #df2 = df2[df2["Clicks"] == 0]
-    #df2.to_csv(r"C:\Users\leonp\Documents\iProm_podatki\0\users_0.csv", "\t", header=["userID", "Clicks"])
+    df2 = df.groupby(["userID"]).sum().reset_index()
+    df2 = df2[df2["Clicks"] == 0]
+    df2.to_csv(r"C:\Users\leonp\Documents\iProm_podatki\0\users_0.csv", "\t", header=["userID", "Clicks"])
 
 
     Clustering.filter_users.filter_users(path)
