@@ -99,7 +99,7 @@ for f in all_files[:10]:
                 hit_0 += 1
             print("hit_0: ", hit_0, "observed_0: ", observed_0, "Predicted: ",  siteCategory_adIndustry[x_["SiteCategory"]], "Actual: ", result_category)
 
-        
+
 
     print("Percentage: ",  (hit_1 + hit_0) / (observed_1 + observed_0) * 100)
     print()
