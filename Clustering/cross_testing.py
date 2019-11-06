@@ -39,7 +39,7 @@ for f in all_files[:10]:
 
 
 
-    test_df = df.tail(round(0.4 * df.shape[0]))
+    test_df_ = df.tail(round(0.4 * df.shape[0]))
     #a = round(0.5 * test_df.shape[0])
     #t = test_df.tail(round(0.5 * test_df.shape[0]))
     Clustering.read_files.read_file_learn_about_users(f)
@@ -50,9 +50,12 @@ for f in all_files[:10]:
     kmeans_1 = KMeans_1.Model1(r"C:\Users\leonp\Documents\iProm_podatki\1" + "\\" + file_name, testing=True)
     print("Model 1 created")
 
-    test_0 = KMeans_0.ModelUsersWithNoClicks(r"C:\Users\leonp\Documents\iProm_podatki\0" + "\\test_" + file_name).matrix_full
+    test_df = KMeans_0.ModelUsersWithNoClicks(r"C:\Users\leonp\Documents\iProm_podatki" + "\\test_" + file_name).matrix_full
+
+    matrix_0 = kmeans_0.matrix_full
     print("Matrix 0 built")
-    test_1 = KMeans_1.Model1(r"C:\Users\leonp\Documents\iProm_podatki\1" + "\\test_" + file_name, testing=True).build_matrix_1()
+    #test_1 = KMeans_1.Model1(r"C:\Users\leonp\Documents\iProm_podatki" + "\\test_" + file_name, testing=True).build_matrix_1()
+    matrix_1 = kmeans_1.build_matrix_1()
     print("Matrix 1 built")
 
     #print(test_1[0])
@@ -71,12 +74,12 @@ for f in all_files[:10]:
     results_0, clusters_0 = kmeans_0.results()
     print("KMeans 0 done")
 
-    for _, x_ in test_df.iterrows():
+    for _, x_ in test_df_.iterrows():
         x = x_["UserID"]
-        if x in test_1[1] and x_["Clicks"] != 0:
+        if x in matrix_1[1] and x_["Clicks"] != 0:
             observed_1 += 1
-            zx = np.where(test_1[1] == x)[0]
-            z = test_1[0][zx]
+            zx = np.where(test_df[1] == x)[0]
+            z = test_df[0][zx]
             distances = [distance.euclidean(z, y) for y in clusters_1]
 
             result = distances.index(min(distances))
@@ -86,10 +89,10 @@ for f in all_files[:10]:
                 hit_1 += 1
             print("hit_1: ", hit_1, "observed_1: ", observed_1, "Predicted: ",  x_["AdIndustry"], "Actual: ", result_category)
 
-        elif x in test_0[1] and x_["Clicks"] != 0:
+        elif x in matrix_0[1] and x_["Clicks"] != 0:
             observed_0 += 1
-            zx = np.where(test_0[1] == x)[0]
-            z = test_0[0][zx]
+            zx = np.where(test_df[1] == x)[0]
+            z = test_df[0][zx]
             distances = [distance.euclidean(z, y) for y in clusters_1]
 
             result = distances.index(min(distances))
