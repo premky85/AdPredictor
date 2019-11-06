@@ -31,12 +31,12 @@ def read_file_learn_about_users(path):
 
 
     df1 = df.groupby(["userID"]).sum().reset_index()
-    df1 = df1[df1["Clicks"] != 0]
-    df1.to_csv(r"C:\Users\leonp\Documents\iProm_podatki\1\users_learn_1.csv", "\t", header=["userID", "Clicks"])
+    #df1 = df1[df1["Clicks"] != 0]
+    df1.to_csv(r"C:\Users\leonp\Documents\iProm_podatki\users_learn.csv", "\t", header=["userID", "Clicks"])
 
-    df2 = df.groupby(["userID"]).sum().reset_index()
-    df2 = df2[df2["Clicks"] == 0]
-    df2.to_csv(r"C:\Users\leonp\Documents\iProm_podatki\0\users_learn_0.csv", "\t", header=["userID", "Clicks"])
+    #df2 = df.groupby(["userID"]).sum().reset_index()
+    #df2 = df2[df2["Clicks"] == 0]
+    #df2.to_csv(r"C:\Users\leonp\Documents\iProm_podatki\0\users_learn_0.csv", "\t", header=["userID", "Clicks"])
 
     Clustering.filter_users.filter_users_learn(path)
 

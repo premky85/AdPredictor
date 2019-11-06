@@ -39,11 +39,11 @@ def filter_users(path):
                             "MasterSiteID", "SiteCategory", "AdIndustry", "Requests", "Views", "Clicks"], index=False)
 
 def filter_users_learn(path):
-    unique_user_id_1 = r"C:\Users\leonp\Documents\iProm_podatki\1\users_learn_1.csv"
-    unique_user_id_0 = r"C:\Users\leonp\Documents\iProm_podatki\0\users_learn_0.csv"
+    unique_user_id = r"C:\Users\leonp\Documents\iProm_podatki\users_learn.csv"
+    #unique_user_id_0 = r"C:\Users\leonp\Documents\iProm_podatki\0\users_learn_0.csv"
 
-    df_ids_1 = pd.read_csv(unique_user_id_1, header=0, sep='\t', usecols=[1])
-    df_ids_0 = pd.read_csv(unique_user_id_0, header=0, sep='\t', usecols=[1])
+    df_ids = pd.read_csv(unique_user_id, header=0, sep='\t', usecols=[1])
+    #df_ids_0 = pd.read_csv(unique_user_id_0, header=0, sep='\t', usecols=[1])
 
     all_files = glob.glob(path)#os.path.join(path, "*.csv"))
     for f in all_files:
@@ -56,17 +56,17 @@ def filter_users_learn(path):
         name = os.path.basename(f)
 
 
-        df_0 = df.loc[df["UserID"].isin(df_ids_0.values)]
+        df_0 = df.loc[df["UserID"].isin(df_ids.values)]
 
-        df_0.to_csv(r"C:\Users\leonp\Documents\iProm_podatki\0" + "\\test_" + name, "\t",
+        df_0.to_csv(r"C:\Users\leonp\Documents\iProm_podatki" + "\\test_" + name, "\t",
                   header=["Date", "DayOfWeek", "TimeFrame", "UserID", "SiteID", "CampaignID", "AdID", "ZoneID",
                          "MasterSiteID", "SiteCategory", "AdIndustry", "Requests", "Views", "Clicks"], index=False)
 
-        df_1 = df.loc[df["UserID"].isin(df_ids_1.values)]
+        #df_1 = df.loc[df["UserID"].isin(df_ids_1.values)]
 
-        df_1.to_csv(r"C:\Users\leonp\Documents\iProm_podatki\1" + "\\test_" + name, "\t",
-                    header=["Date", "DayOfWeek", "TimeFrame", "UserID", "SiteID", "CampaignID", "AdID", "ZoneID",
-                            "MasterSiteID", "SiteCategory", "AdIndustry", "Requests", "Views", "Clicks"], index=False)
+        #df_1.to_csv(r"C:\Users\leonp\Documents\iProm_podatki\1" + "\\test_" + name, "\t",
+        #            header=["Date", "DayOfWeek", "TimeFrame", "UserID", "SiteID", "CampaignID", "AdID", "ZoneID",
+        #                    "MasterSiteID", "SiteCategory", "AdIndustry", "Requests", "Views", "Clicks"], index=False)
 
 
 
