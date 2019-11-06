@@ -50,7 +50,8 @@ for f in all_files[:10]:
     kmeans_1 = KMeans_1.Model1(r"C:\Users\leonp\Documents\iProm_podatki\1" + "\\" + file_name, testing=True)
     print("Model 1 created")
 
-    test_df = KMeans_0.ModelUsersWithNoClicks(r"C:\Users\leonp\Documents\iProm_podatki" + "\\test_" + file_name).matrix_full
+    test_df_0 = KMeans_0.ModelUsersWithNoClicks(r"C:\Users\leonp\Documents\iProm_podatki" + "\\test_" + file_name).matrix_full
+    test_df_1 = KMeans_1.Model1(r"C:\Users\leonp\Documents\iProm_podatki" + "\\test_" + file_name, testing=True).build_matrix_1()
 
     matrix_0 = kmeans_0.matrix_full
     print("Matrix 0 built")
@@ -65,21 +66,22 @@ for f in all_files[:10]:
     #print(test_0[1])
 
     #clusters_0 =
-    kmeans_1.kmeans(k=6,iter=150)
-    results_1, clusters_1 = kmeans_1.results()
-    print("KMeans 1 done")
+
     #lala = t[t["Clicks"] != 0]
 
-    kmeans_0.kMeans(50, testing=True)
+    kmeans_0.kMeans(5, testing=True)
     results_0, clusters_0 = kmeans_0.results()
     print("KMeans 0 done")
 
+    kmeans_1.kmeans(k=6, iter=150)
+    results_1, clusters_1 = kmeans_1.results()
+    print("KMeans 1 done")
     for _, x_ in test_df_.iterrows():
         x = x_["UserID"]
-        if x in matrix_1[1] and x_["Clicks"] != 0:
+        if x in matrix_1[1] and x_["Clicks"] != 0 and x_["AdIndustry"] != 0:
             observed_1 += 1
-            zx = np.where(test_df[1] == x)[0]
-            z = test_df[0][zx]
+            zx = np.where(test_df_1[1] == x)[0]
+            z = test_df_1[0][zx]
             distances = [distance.euclidean(z, y) for y in clusters_1]
 
             result = distances.index(min(distances))
@@ -87,20 +89,20 @@ for f in all_files[:10]:
 
             if result_category == x_["AdIndustry"]:
                 hit_1 += 1
-            print("hit_1: ", hit_1, "observed_1: ", observed_1, "Predicted: ",  x_["AdIndustry"], "Actual: ", result_category)
+            print("guessed_1: ", hit_1, "observed_1: ", observed_1, "Predicted: ",  result_category, "Actual: ", x_["AdIndustry"])
 
-        elif x in matrix_0[1] and x_["Clicks"] != 0:
+        elif x in matrix_0[1] and x_["Clicks"] != 0 and x_["SiteCategory"] != 0 and x_["AdIndustry"] != 0:
             observed_0 += 1
-            zx = np.where(test_df[1] == x)[0]
-            z = test_df[0][zx]
-            distances = [distance.euclidean(z, y) for y in clusters_1]
+            zx = np.where(test_df_0[1] == x)[0]
+            z = test_df_0[0][zx]
+            distances = [distance.euclidean(z, y) for y in clusters_0]
 
             result = distances.index(min(distances))
             result_category = np.where(results_0[result] == np.max(results_0[result]))[0][0]
 
-            if result_category == siteCategory_adIndustry[x_["SiteCategory"]]:
+            if siteCategory_adIndustry[result_category] == x_["AdIndustry"]:
                 hit_0 += 1
-            print("hit_0: ", hit_0, "observed_0: ", observed_0, "Predicted: ",  siteCategory_adIndustry[x_["SiteCategory"]], "Actual: ", result_category)
+            print("guessed_0: ", hit_0, "observed_0: ", observed_0, "Predicted: ",  siteCategory_adIndustry[result_category], "Actual: ", x_["AdIndustry"])
 
 
 
