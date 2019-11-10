@@ -9,7 +9,7 @@ class Model1:
     def __init__(self,path, testing):
         self.path = path
         self.all_files = glob.glob(path)
-        self.df, self.df2 = self.read_to_df(self.all_files)
+        self.df, self.df2, self.df_site_category = self.read_to_df(self.all_files)
         self.k_clusters = 6
         self.categories = np.arange(23)
         self.testing = testing
@@ -20,19 +20,28 @@ class Model1:
         self.userSkupina = ""
 
     def read_to_df(self,all_files):
-        df = pd.concat((pd.read_csv(f, header=0, sep='\t', usecols=[3, 10, 13], dtype={"Clicks": np.float},  names=["UserID", "AdIndustry", "Clicks"]) for f in all_files), ignore_index=True)
+        df = pd.concat((pd.read_csv(f, header=0, sep='\t', usecols=[3, 9, 10, 13], dtype={"Clicks": np.float},  names=["UserID", "SiteCategory", "AdIndustry", "Clicks"]) for f in all_files), ignore_index=True)
         df = df.loc[(df["AdIndustry"] != 0)] #& (df["AdIndustry"] != "0")]
+        d = df.copy()
+        df = df.drop(columns=["SiteCategory"])
+        df_site_category = d.loc[d["SiteCategory"] != 0].drop(columns=["UserID"])
+        df_site_category = df_site_category.groupby(["SiteCategory", "AdIndustry"]).sum()
+
+        #df_site_category = df_site_category
         df = df.groupby(["UserID", "AdIndustry"]).sum()
         df = df.loc[df["Clicks"] > 0]
+        df_site_category = df_site_category.loc[df_site_category["Clicks"] > 0]
+        df_site_category = df_site_category.groupby(level=0).apply(lambda x: 100 * x / x.sum()).reset_index()
         pomozni = df.copy().reset_index()
         #df2 = df.copy().reset_index() # real clicks
         #del df2["AdIndustry"]
         #df2 = df2.groupby("UserID").sum().reset_index()
         df = df.groupby(level=0).apply(lambda x: 100 * x/x.sum()).reset_index()
         df.rename(columns={df.columns[2]: "Size"}, inplace=True)
+        df_site_category.rename(columns={df_site_category.columns[2]: "Size"}, inplace=True)
         #self.df = df
         #self.df2 = df2
-        return df,pomozni
+        return df, pomozni, df_site_category
 
 
     def build_matrix_1(self):
@@ -60,6 +69,33 @@ class Model1:
                 if user in vektoruser and category in vektoruser[user]:
                     matrika[i][j] = vektoruser[user][category]
         return np.array(matrika), self.users
+
+    def build_ad_site_corelation(self):
+        from collections import defaultdict
+        site_categories = self.df_site_category["SiteCategory"].unique()  # vse unikatni kategorije spletnih strani (no duplicates)
+
+        vektor_site_categories = defaultdict(dict)  # slovar slovarjev
+
+        # index je row index(tega nerabmo)
+        # user = UserID in SiteCategory in Size
+        for index, site_cat in self.df_site_category.iterrows():
+            vektor_site_categories[site_cat["SiteCategory"]][site_cat["AdIndustry"]] = site_cat[
+                "Size"]  # prvi slovar so userji, kljuci so slovarji kategorij vrednosr je size(procenti)
+
+        # predpripavimo matriko, tako da vse vrednosti nastavimo na 0
+        matrika = []
+        for _ in range(0, len(site_categories)):
+            row = []
+            for _ in range(0, len(self.categories)):
+                row.append(0)
+            matrika.append(row)
+
+        # skozi vse userje (i = vrstica) in skozi vse kategorije (j = stolpec)
+        for i, site_cat in enumerate(site_categories):
+            for j, category in enumerate(self.categories):
+                if site_cat in site_categories and category in vektor_site_categories[site_cat]:
+                    matrika[i][j] = vektor_site_categories[site_cat][category]
+        return np.array(matrika), site_categories
 
     def kmeans(self, k, iter):
         self.k_clusters = k
@@ -121,5 +157,6 @@ class Model1:
 
 
 #modelMario = Model1(r"C:\Users\leonp\Documents\iProm_podatki\1\export_2019-03-18.csv", testing=True)
-#modelMario.kmeans(k=6,iter=150)
+#n = modelMario.build_ad_site_corelation()
+#modelMario.kmeans(k=25,iter=150)
 #print(modelMario.results())

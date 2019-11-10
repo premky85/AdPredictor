@@ -40,5 +40,4 @@ def read_file_learn_about_users(path):
 
     Clustering.filter_users.filter_users_learn(path)
 
-    #TODO fix users with no clicks to only be used in learn sets
 

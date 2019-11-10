@@ -8,6 +8,15 @@ from random import randint
 from collections import defaultdict
 #PATH = r"C:\Users\Domen Brunček\Desktop\FRI\4 semester\Data Mining\Project\podatki\filtered_data\0\export_2019-02-23.csv"
 
+d1 = {0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, 11: 11, 12: 12, 13: 13, 14: 14,
+                           15: 15, 16: 16, 17: 17, 18: 18, 19: 19, 20: 20, 21: 21, 22: 2, 23: 23, 24: 24, 25: 25,
+                           26: 26, 1000: 27, 1001: 28, 1002: 29, 1003: 30, 1004: 31, 1005: 32, 1006: 33, 1007: 34,
+                           1008: 35, 1009: 36, 1010: 37}
+
+d = {0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, 11: 11, 12: 12, 13: 13, 14: 14,
+                           15: 15, 16: 16, 17: 17, 18: 18, 19: 19, 20: 20, 21: 21, 22: 2, 23: 23, 24: 24, 25: 25,
+                           26: 26, 27: 1000, 28: 1001, 29: 1002, 30: 1003, 31: 1004, 32: 1005, 33: 1006, 34: 1007,
+                           35: 1008, 36: 1009, 37: 1010}
 
 class ModelUsersWithNoClicks:
     def __init__(self, path):
@@ -29,7 +38,7 @@ class ModelUsersWithNoClicks:
 
     def make_matrix(self):
         self.users = self.df["UserID"].unique()[:-1]  # vsi unikatni userji (no duplicates)
-        self.categories = self.df["SiteCategory"].unique()[:-1]  # vse unikatne kategorija
+        self.categories = np.arange(38)#self.df["SiteCategory"].unique()[:-1]  # vse unikatne kategorija
 
 
         vector_users = defaultdict(dict)  # slovar slovarjev
@@ -47,9 +56,9 @@ class ModelUsersWithNoClicks:
 
         # skozi vse userje (i = vrstica) in skozi vse kategorije (j = stolpec)
         for i, user in enumerate(self.users):
-            for j, category in enumerate(self.categories):
-                if user in vector_users and category in vector_users[user]:
-                    matrika[i][j] = vector_users[user][category]
+            for j in self.categories:
+                if user in vector_users and d[j] in vector_users[user]:
+                    matrika[i][j] = vector_users[user][d[j]]
         return np.array(matrika), self.users
 
     def kMeans(self, k, plot=False, testing=False):

@@ -9,22 +9,28 @@ import Clustering.read_files
 import numpy as np
 from scipy.spatial import distance
 from sklearn.decomposition import PCA
+import random
 
 
 
 path = r"C:\Users\leonp\Documents\iProm_podatki"
 
 all_files = glob.glob(os.path.join(path, "*.csv"))
-siteCategory_adIndustry = {1: 9, 2: 1, 3: 11, 4: 5, 6: 6, 7: 9, 8: 4, 9: 15, 10: 18, 11: 7, 12: 8, 13: 14, 14: 16,
+siteCategory_adIndustry = {1: 9, 2: 1, 3: 11, 4: 5, 5: 3, 6: 6, 7: 9, 8: 4, 9: 15, 10: 18, 11: 7, 12: 8, 13: 14, 14: 16,
                            15: 15, 16: 12, 17: 15, 18: 11, 19: 15, 20: 12, 21: 15, 22: 17, 23: 15, 24: 15, 25: 15,
                            26: 15, 1000: 18, 1001: 18, 1002: 15, 1003: 13, 1004: 7, 1005: 10, 1006: 14, 1007: 9,
                            1008: 21, 1009: 22, 1010: 13}
+
+
+#TODO replace 1000 etc. with lower numbers - problem: some categories are not always in learn set
+
+
 observed_0 = 0
 observed_1 = 0
 hit_0 = 0
 hit_1 = 0
 i = 0
-for f in all_files[:10]:
+for f in all_files: #[:10]:
     file_name = os.path.basename(f)
     print(i, ": ", file_name)
     i += 1
@@ -36,9 +42,6 @@ for f in all_files[:10]:
                             "MasterSiteID", "SiteCategory", "AdIndustry", "Requests", "Views", "Clicks"],
                      index_col=False)
 
-
-
-
     test_df_ = df.tail(round(0.4 * df.shape[0]))
     #a = round(0.5 * test_df.shape[0])
     #t = test_df.tail(round(0.5 * test_df.shape[0]))
@@ -47,11 +50,12 @@ for f in all_files[:10]:
 
     kmeans_0 = KMeans_0.ModelUsersWithNoClicks(r"C:\Users\leonp\Documents\iProm_podatki\0" + "\\" + file_name)
     print("Model 0 created")
-    kmeans_1 = KMeans_1.Model1(r"C:\Users\leonp\Documents\iProm_podatki\1" + "\\" + file_name, testing=True)
+    kmeans_1 = KMeans_1.Model1(r"C:\Users\leonp\Documents\iProm_podatki\1" + "\\" + file_name, testing=False)
+    siteCategory_adIndustry_1 = kmeans_1.build_ad_site_corelation()
     print("Model 1 created")
 
     test_df_0 = KMeans_0.ModelUsersWithNoClicks(r"C:\Users\leonp\Documents\iProm_podatki" + "\\test_" + file_name).matrix_full
-    test_df_1 = KMeans_1.Model1(r"C:\Users\leonp\Documents\iProm_podatki" + "\\test_" + file_name, testing=True).build_matrix_1()
+    test_df_1 = KMeans_1.Model1(r"C:\Users\leonp\Documents\iProm_podatki" + "\\test_" + file_name, testing=False).build_matrix_1()
 
     matrix_0 = kmeans_0.matrix_full
     print("Matrix 0 built")
@@ -69,11 +73,11 @@ for f in all_files[:10]:
 
     #lala = t[t["Clicks"] != 0]
 
-    kmeans_0.kMeans(5, testing=True)
+    kmeans_0.kMeans(50)
     results_0, clusters_0 = kmeans_0.results()
     print("KMeans 0 done")
 
-    kmeans_1.kmeans(k=6, iter=150)
+    kmeans_1.kmeans(k=50, iter=150)
     results_1, clusters_1 = kmeans_1.results()
     print("KMeans 1 done")
     for _, x_ in test_df_.iterrows():
@@ -100,9 +104,28 @@ for f in all_files[:10]:
             result = distances.index(min(distances))
             result_category = np.where(results_0[result] == np.max(results_0[result]))[0][0]
 
-            if siteCategory_adIndustry[result_category] == x_["AdIndustry"]:
+            # if site category is unknown select second closest
+            iter = 1
+            while result_category == 0 and iter <= len(distances):
+                print("Selected %d closest", iter + 1)
+                distances1 = distances
+                for i in range(iter):
+                    result = distances1.pop(distances1.index(min(distances1)))
+                result_category = np.where(results_0[result] == np.max(results_0[result]))[0][0]
+                iter += 1
+
+            if result_category in siteCategory_adIndustry_1[1]:
+                ind = siteCategory_adIndustry_1[1].tolist().index(result_category)
+                choices = [x for x in range(23)]
+                result_category = random.choices(population=choices, weights=siteCategory_adIndustry_1[0][ind])[0]
+            else:
+                result_category = siteCategory_adIndustry[result_category]
+
+            if result_category == x_["AdIndustry"]:
                 hit_0 += 1
-            print("guessed_0: ", hit_0, "observed_0: ", observed_0, "Predicted: ",  siteCategory_adIndustry[result_category], "Actual: ", x_["AdIndustry"])
+            elif iter == len(distances) + 1:
+                print("Unknown site category!")
+            print("guessed_0: ", hit_0, "observed_0: ", observed_0, "Predicted: ",  result_category, "Actual: ", x_["AdIndustry"])
 
 
 
