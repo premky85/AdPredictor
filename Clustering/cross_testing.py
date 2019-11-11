@@ -50,12 +50,12 @@ for f in all_files: #[:10]:
 
     kmeans_0 = KMeans_0.ModelUsersWithNoClicks(r"C:\Users\leonp\Documents\iProm_podatki\0" + "\\" + file_name)
     print("Model 0 created")
-    kmeans_1 = KMeans_1.Model1(r"C:\Users\leonp\Documents\iProm_podatki\1" + "\\" + file_name, testing=False)
+    kmeans_1 = KMeans_1.Model1(r"C:\Users\leonp\Documents\iProm_podatki\1" + "\\" + file_name, testing=True)
     siteCategory_adIndustry_1 = kmeans_1.build_ad_site_corelation()
     print("Model 1 created")
 
     test_df_0 = KMeans_0.ModelUsersWithNoClicks(r"C:\Users\leonp\Documents\iProm_podatki" + "\\test_" + file_name).matrix_full
-    test_df_1 = KMeans_1.Model1(r"C:\Users\leonp\Documents\iProm_podatki" + "\\test_" + file_name, testing=False).build_matrix_1()
+    test_df_1 = KMeans_1.Model1(r"C:\Users\leonp\Documents\iProm_podatki" + "\\test_" + file_name, testing=True).build_matrix_1()
 
     matrix_0 = kmeans_0.matrix_full
     print("Matrix 0 built")
@@ -73,7 +73,7 @@ for f in all_files: #[:10]:
 
     #lala = t[t["Clicks"] != 0]
 
-    kmeans_0.kMeans(50)
+    kmeans_0.kMeans(50, testing=True)
     results_0, clusters_0 = kmeans_0.results()
     print("KMeans 0 done")
 
