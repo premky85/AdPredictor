@@ -8,7 +8,7 @@ import os
 
 
 def read_file(path):
-    all_files = glob.glob(path)#os.path.join(path, "*.csv"))
+    all_files = glob.glob(os.path.join(path, "*.csv"))
     df = pd.concat((pd.read_csv(f, header=None, sep='\t', usecols=[3, 13], names=["userID", "Clicks"]) for f in all_files), ignore_index=True)
     df = df.head(round(0.6 * df.shape[0]))
 
